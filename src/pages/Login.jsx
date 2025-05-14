@@ -50,10 +50,15 @@ const LoginPage = () => {
         throw err;
       }
 
-      navigate("/");
+      navigate("/offres/professionnelles");
     } catch (err) {
       console.log(err.message);
-      setError("Une erreur est survenue lors de la connexion");
+
+      if (err.status === 401) {
+        setError("Email ou mot de passe incorrect.");
+      } else {
+        setError("Une erreur est survenue lors de la connexion");
+      }
     }
     console.log("Login:", formData);
   };
