@@ -1,6 +1,13 @@
 import { useState } from "react";
-import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
-
+import {
+  Form,
+  Button,
+  Container,
+  Card,
+  Row,
+  Col,
+  Alert,
+} from "react-bootstrap";
 import { useNavigate } from "react-router";
 
 const Register = () => {
@@ -9,6 +16,7 @@ const Register = () => {
     name: "",
     password: "",
   });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,21 +29,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.email.includes("@")) {
-      alert("Veuillez entrer une adresse email valide.");
-      return;
-    }
-
-    if (formData.name.trim().length < 3) {
-      alert("Le nom doit contenir au moins 3 caractères.");
-      return;
-    }
-
-    if (formData.password.length < 8) {
-      alert("Le mot de passe doit contenir au moins 8 caractères.");
-      return;
-    }
+    setError("");
 
     try {
       const response = await fetch(
@@ -60,13 +54,10 @@ const Register = () => {
         );
       }
 
-      const data = await response.json();
-      alert(`${data.name} a été créé`);
-      console.log("Form submitted:", formData);
       navigate("/connexion");
     } catch (err) {
       console.log(err.message);
-      alert(`L'utilisateur n'a pu être ajouté: ${err.message}`);
+      setError(err.message);
     }
   };
 
@@ -76,6 +67,7 @@ const Register = () => {
         <Col xs={12} sm={8} md={6} lg={4}>
           <Card className="p-4 shadow-lg">
             <h2 className="text-center mb-4">Créer un compte</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="formEmail">
                 <Form.Label>Email</Form.Label>
