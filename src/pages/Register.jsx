@@ -44,13 +44,12 @@ const Register = () => {
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        const errorMessage = errorData.message || "Une erreur est survenue.";
-        throw new Error(
-          `Erreur HTTP: ${
-            response.statusText ? response.statusText + " - " : ""
-          }${response.status} - ${errorMessage}`
+        const data = await response.json();
+        const err = new Error(
+          data.message || "Une erreur est survenue lors de l'inscription."
         );
+        err.status = response.status;
+        throw err;
       }
 
       navigate("/connexion");
