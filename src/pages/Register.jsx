@@ -29,7 +29,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
     try {
       const response = await fetch(
@@ -57,7 +56,7 @@ const Register = () => {
       navigate("/connexion");
     } catch (err) {
       console.log(err.message);
-      setError(err.message);
+      setError("Une erreur est survenue lors de l'inscription");
     }
   };
 
