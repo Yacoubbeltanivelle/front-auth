@@ -41,14 +41,31 @@ const LoginPage = () => {
         }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         const err = new Error(
           data.message || "Une erreur est survenue lors de la connexion."
         );
         err.status = response.status;
         throw err;
       }
+
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          token: data.access_token,
+          // Calcule la date d’expiration en ISO à partir de l’heure actuelle et de expires_in
+          expiresAt: new Date(
+            Date.now() + data.expires_in * 1000
+          ).toISOString(), //
+        })
+      );
+      console.log("Token:", data.access_token);
+      console.log(
+        "Expires at:",
+        new Date(Date.now() + data.expires_in * 1000).toISOString()
+      );
 
       navigate("/offres/professionnelles");
     } catch (err) {
