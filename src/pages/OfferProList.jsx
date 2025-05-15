@@ -7,14 +7,6 @@ const OfferProList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const getValidToken = () => {
-    const auth = JSON.parse(localStorage.getItem("auth"));
-    const isValid = auth && new Date(auth.expiresAt) > new Date();
-    console.log("Token:", auth.token);
-    console.log("Expires at:", new Date(auth.expiresAt).toISOString());
-    return isValid ? auth.token : null;
-  };
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -23,7 +15,9 @@ const OfferProList = () => {
           {
             headers: {
               Accept: "application/json",
-              Authorization: "Bearer " + getValidToken(),
+              Authorization: `Bearer ${
+                JSON.parse(localStorage.getItem("auth"))?.token
+              }`,
             },
           }
         );
