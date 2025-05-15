@@ -10,9 +10,13 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../store/authSlice";
+
 const LoginPage = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -41,16 +45,24 @@ const LoginPage = () => {
         }
       );
 
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         const err = new Error(
           data.message || "Une erreur est survenue lors de la connexion."
         );
         err.status = response.status;
         throw err;
+      } else {
+        dispatch(
+          loginSuccess({
+            token: data.access_token,
+            expiresAt: new Date(
+              Date.now() + data.expires_in * 1000
+            ).toISOString(),
+          })
+        );
+        navigate("/offres/professionnelles");
       }
-
-      navigate("/offres/professionnelles");
     } catch (err) {
       console.log(err.message);
 

@@ -1,14 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 
+import { logout } from "../store/authSlice";
 
 const Logout = () => {
-   useEffect(() => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+
+  useEffect(() => {
     const handleLogout = async () => {
-      // (1) Appel API pour notifier la déconnexion
+      await fetch("/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      // (2) Suppression du token côté frontend
+      dispatch(logout());
 
-      // (3) Redirection vers la page de login
+      navigate("/connexion");
     };
 
     handleLogout();
