@@ -14,6 +14,7 @@ const Offer = () => {
         const response = await fetch(
           `https://offers-api.digistos.com/api/offers/${id}`,
           {
+            credentials: "include", // permet au navigateur de recevoir et stocker le cookie HttpOnly
             headers: {
               Accept: "application/json",
               // Add Authorization token
@@ -22,7 +23,7 @@ const Offer = () => {
         );
 
         const { data: offers, message } = await response.json();
-        
+
         if (!response.ok) {
           throw { status: response.status, message: message };
         }

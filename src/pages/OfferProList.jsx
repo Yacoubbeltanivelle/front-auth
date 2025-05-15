@@ -13,6 +13,7 @@ const OfferProList = () => {
         const response = await fetch(
           "https://offers-api.digistos.com/api/offers/pro",
           {
+            credentials: "include", // permet au navigateur de recevoir et stocker le cookie HttpOnly
             headers: {
               Accept: "application/json",
               // Add Authorization token

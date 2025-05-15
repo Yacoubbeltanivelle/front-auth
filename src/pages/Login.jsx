@@ -37,20 +37,31 @@ const LoginPage = () => {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
+
           body: JSON.stringify(formData),
+          credentials: "include", // permet au navigateur de recevoir et stocker le cookie HttpOnly
         }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         const err = new Error(
           data.message || "Une erreur est survenue lors de la connexion."
         );
         err.status = response.status;
         throw err;
+      } else {
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            expiresAt: new Date(
+              Date.now() + data.expires_in * 1000
+            ).toISOString(),
+          })
+        );
+        navigate("/offres/professionnelles");
       }
-
-      navigate("/offres/professionnelles");
     } catch (err) {
       console.log(err.message);
 
